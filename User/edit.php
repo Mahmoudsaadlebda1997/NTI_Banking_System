@@ -1,7 +1,22 @@
 <?php
 
+// require '../helpers/db.php';
 require '../helpers/functions.php';
-session_start();
+require 'checklogin.php';
+# Fetch Id Data .... 
+
+$id = $_GET['id'];
+echo $id;
+#############################################################################################################
+# FETCH RAW DATA ..... 
+// $sql = "select * from users where id = $id";
+// $op  = mysqli_query($con, $sql);
+// $data = mysqli_fetch_assoc($op);
+#############################################################################################################
+// # Fetch dep data ..... 
+// $sql = "select * from departments"; 
+// $dep_op = mysqli_query($con,$sql);
+#############################################################################################################
 
 
 
@@ -148,6 +163,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
                                 <?php
                                     # Print Messages ....
                                     Messages('Online Banking \ Register');
+                                    
+                                    
                                 ?>
                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
                                     <div class="form-row">

@@ -39,7 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
       $sql = "select * from users where email = '$email'  and  password = '$password'";
       $op  = doQuery($sql);
 
-
+      if ($op) {
+          $message = ["success" => "Login Succesfully"];
+      } else {
+          $message = ["Error" => "Wrong Credentials"];
+      }
      if(mysqli_num_rows($op) == 1){
          // code .... 
 

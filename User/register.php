@@ -1,6 +1,7 @@
 <?php
 
 require '../helpers/functions.php';
+session_start();
 
 
 

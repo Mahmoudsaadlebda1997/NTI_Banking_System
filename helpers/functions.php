@@ -160,10 +160,10 @@ function removeFile($file){
 
 
 
-function url($input){
+// function url($input){
 
-    return 'http://'.$_SERVER['HTTP_HOST'].'/group13/week3/Admin/'.$input;
-}
+//     return 'http://'.$_SERVER['HTTP_HOST'].'/group13/week3/Admin/'.$input;
+// }
 
 ###############################################################################################################
 

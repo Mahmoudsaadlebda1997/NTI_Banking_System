@@ -41,20 +41,16 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
       if ($op) {
           $message = ["success" => "Login Succesfully"];
+          $userData = mysqli_fetch_assoc($op);
+
+          $_SESSION['user'] = $userData;
+
+          header("location: index.php");
+
       } else {
           $message = ["Error" => "Wrong Credentials"];
       }
-     if(mysqli_num_rows($op) == 1){
-         // code .... 
 
-         $userData = mysqli_fetch_assoc($op);
-
-         $_SESSION['user'] = $userData;
-         header("location: index.php");
-
-     }else{
-         echo 'Error in Your Cred Try Again';
-     }
 
 
      # Close Connection .... 

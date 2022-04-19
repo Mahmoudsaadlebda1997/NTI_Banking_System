@@ -33,6 +33,7 @@ function validate($input, $flag,$length = 6 , $equalTo = null)
                 $status = false;
             }
             break;
+
         case 'email_not_exist':
             $query = "select * from users where email = '$input'";
             $op = doQuery($query);
@@ -43,6 +44,17 @@ function validate($input, $flag,$length = 6 , $equalTo = null)
             {
                 $status = false;
             }
+            break;
+        case 'email_not_exist_equal':
+            $query = "select * from users where email = '$input'";
+            $op = doQuery($query);
+            $res = mysqli_fetch_assoc($op)['email'] ?? '';
+            if(!empty($res) && $res != $input )
+            {
+                $status = false;
+            }
+
+
             break;
         case 'int':
             # code ...

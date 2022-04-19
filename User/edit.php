@@ -1,35 +1,23 @@
 <?php
 
-// require '../helpers/db.php';
 require '../helpers/functions.php';
 require 'checklogin.php';
-# Fetch Id Data .... 
+# Fetch Id Data ....
 
-$id = $_GET['id'];
-echo $id;
 #############################################################################################################
-# FETCH RAW DATA ..... 
-// $sql = "select * from users where id = $id";
-// $op  = mysqli_query($con, $sql);
-// $data = mysqli_fetch_assoc($op);
+# FETCH RAW DATA .....
+$userId = $_SESSION['user']['id'];
+$sql = "select * from users where id = $userId";
+$op  = mysqli_query($con, $sql);
+$data = mysqli_fetch_assoc($op);
 #############################################################################################################
-// # Fetch dep data ..... 
-// $sql = "select * from departments"; 
-// $dep_op = mysqli_query($con,$sql);
-#############################################################################################################
-
-
 
 if ($_SERVER['REQUEST_METHOD'] == "POST")
 {
-
-  $first_name = clean($_POST['first_name']);
-  $last_name = clean($_POST['last_name']);
-  $email = clean($_POST['email']);
-  $country = clean($_POST['country']);
-  $password = clean($_POST['password']);
-  $password_confirmation = clean($_POST['password_confirmation']);
-  $mobile = clean($_POST['mobile']);
+    $first_name = clean($_POST['first_name']);
+    $last_name = clean($_POST['last_name']);
+    $email = clean($_POST['email']);
+    $mobile = clean($_POST['mobile']);
 
     # Error []
     $errors = [];
@@ -42,8 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
     } elseif (!validate($first_name, 'string')) {
         $errors['First Name'] = "Field Must be a string";
     }
-
-
 
     # Validate First Name ....
     if (!validate($last_name, 'required')) {
@@ -59,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
         $errors['Email'] = "Field Required";
     } elseif (!validate($email, 'email')) {
         $errors['Email'] = "Invalid Format";
-    } elseif (!validate($email, 'email_not_exist')) {
+    } elseif (!validate($email, 'email_not_exist_equal')) {
         $errors['Email'] = "Email is already exist";
     }
 
@@ -71,72 +57,68 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
         $errors['mobile'] = "InValid Format";
     }
 
+    if (!empty($_FILES['image']['name']))
+    {
+        # Validate image
+        if (!validate($_FILES, 'image')) {
+            $errors['Image'] = "Invalid Format";
+        }
 
-    # Validate password
-    if (!validate($password, 'required')) {
-        $errors['Password'] = "Field Required";
-    } elseif (!validate($password, 'min' , 6)) {
-        $errors['Password'] = "Field Length must be >= 6 chars";
     }
 
-    # Validate password confirmation
-    if (!validate($password_confirmation, 'required')) {
-        $errors['Password Confirmation'] = "Field Required";
-    } elseif (!validate($password_confirmation, 'min' , 6)) {
-        $errors['Password Confirmation'] = "Field Length must be >= 6 chars";
-    } elseif (!validate($password_confirmation, 'password_confirmation' , 6 , $password)) {
-        $errors['Password Confirmation'] = "The password is not the same";
-    }
-
-
-
-    # Validate image
-    if (!validate($_FILES['image']['name'], 'required')) {
-        $errors['Image'] = "Field Required";
-    } elseif (!validate($_FILES, 'image')) {
-        $errors['Image'] = "Invalid Format";
-    }
 
     # Check Errors ....
     if (count($errors) > 0) {
         $_SESSION['Message'] = $errors;
     }
-    else
-    {
+    else {
         # DB CODE .....
 
-        $typesInfo  =  explode('/', $_FILES['image']['type']);   // convert string to array ...
-        $extension  =  strtolower(end($typesInfo));      // get last element in array ....
 
-        # Create Final Name ...
-        $FinalName = uniqid() . '.' . $extension;
+        if (!empty($_FILES['image']['name']))
+        {
+            # Create Final Name ...
+            $FinalName = uniqid() . '.' . $extension;
 
-        $disPath = '../uploads/' . $FinalName;
+            $disPath = 'uploads/' . $FinalName;
 
-        $temPath = $_FILES['image']['tmp_name'];
+            $temPath = $_FILES['image']['tmp_name'];
 
-        if (move_uploaded_file($temPath, $disPath)) {
+            if (move_uploaded_file($temPath, $disPath))
+            {
 
-            $password = md5($password);
-
-                $sql = "insert into users (firstname,lastname,country,image,email,mobile,password) values ('$first_name','$last_name','$country','$FinalName','$email','$mobile','$password')";
-            $op  = doQuery($sql);
-
-            if ($op) {
-                $message = ["success" => "Raw Inserted"];
-            } else {
-                $message = ["Error" => "Try Again"];
+                unlink('uploads/'.$data['image']);
             }
-        } else {
-            $message = ["Error" => "In Uploading try Again"];
+
+
         }
-        $_SESSION['Message'] = $message;
+        else
+        {
+            $FinalName = $data['image'];
+        }
+
+        $sql = "update users set firstname='$first_name' , lastname='$last_name' ,  email = '$email' , image = '$FinalName' , mobile = $mobile where  id = $userId";
+
+        $op =  mysqli_query($con, $sql);
+
+        if ($op) {
+            $message =  'Profile updated';
+
+            $_SESSION['Message'] = $message;
+
+            header("location: index.php");
+        } else {
+            echo 'Error Try Again ' . mysqli_error($con);
+        }
+
+
+        # Close Connection ....
+        mysqli_close($con);
     }
-
-
-
 }
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -158,11 +140,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
                 <div class="row justify-content-center">
                     <div class="col-lg-7">
                         <div class="card shadow-lg border-0 rounded-lg mt-5">
-                            <div class="card-header"><h3 class="text-center font-weight-light my-4">Create Account</h3></div>
+                            <div class="card-header"><h3 class="text-center font-weight-light my-4">Edit Profile</h3></div>
                             <div class="card-body">
                                 <?php
                                     # Print Messages ....
-                                    Messages('Online Banking \ Register');
+                                    Messages('Online Banking \ Edit Profile');
                                     
                                     
                                 ?>
@@ -171,33 +153,22 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="small mb-1" for="inputFirstName">First Name</label>
-                                                <input name="first_name" class="form-control py-4" id="inputFirstName" type="text" placeholder="Enter first name" />
+                                                <input name="first_name" value="<?php echo $data['firstname'] ?>" class="form-control py-4" id="inputFirstName" type="text" placeholder="Enter first name" />
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="small mb-1" for="inputLastName">Last Name</label>
-                                                <input name="last_name" class="form-control py-4" id="inputLastName" type="text" placeholder="Enter last name" />
+                                                <input name="last_name" value="<?php echo $data['lastname'] ?>" class="form-control py-4" id="inputLastName" type="text" placeholder="Enter last name" />
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="small mb-1" for="inputEmailAddress">Email</label>
-                                        <input name="email" class="form-control py-4" id="inputEmailAddress" type="email" aria-describedby="emailHelp" placeholder="Enter email address" />
+                                        <input name="email" value="<?php echo $data['email'] ?>" class="form-control py-4" id="inputEmailAddress" type="email" aria-describedby="emailHelp" placeholder="Enter email address" />
                                     </div>
                                     <div class="form-row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="small mb-1" for="inputPassword">Password</label>
-                                                <input name="password" class="form-control py-4" id="inputPassword" type="password" placeholder="Enter password" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="small mb-1" for="inputConfirmPassword">Confirm Password</label>
-                                                <input name="password_confirmation" class="form-control py-4" id="inputConfirmPassword" type="password" placeholder="Confirm password" />
-                                            </div>
-                                        </div>
+
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="small mb-1" for="inputConfirmPassword">Country</label>
@@ -454,7 +425,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="small mb-1" for="inputConfirmPassword">Phone Number</label>
-                                                <input class="form-control" type="tel" id="phone" name="mobile" >
+                                                <input class="form-control" value="<?php echo $data['mobile'] ?>" type="tel" id="phone" name="mobile" >
 
                                             </div>
                                         </div>
@@ -466,14 +437,36 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
                                         </div>
                                     </div>
                                     <div class="form-group mt-4 mb-0">
-                                        <button class="form-control btn btn-primary btn-block">Create Account</button>
+                                        <button class="form-control btn btn-primary btn-block">Edit Profile</button>
 
                                     </div>
                                 </form>
+                                <div class="card-header"><h3 class="text-center font-weight-light my-4">Change Password</h3></div>
+
+                                <form action="changepassword.php" method="post">
+                                    <div class="form-row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="small mb-1" for="inputPassword">Password</label>
+                                                    <input name="password" class="form-control py-4" id="inputPassword" type="password" placeholder="Enter password" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="small mb-1" for="inputConfirmPassword">Confirm Password</label>
+                                                    <input name="password_confirmation" class="form-control py-4" id="inputConfirmPassword" type="password" placeholder="Confirm password" />
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    <div class="form-group mt-4 mb-0">
+                                        <button class="form-control btn btn-primary btn-block">Change Password</button>
+                                    </div>
+
+                                </form>
+                          
                             </div>
-                            <div class="card-footer text-center">
-                                <div class="small"><a href="login.php">Have an account? Go to login</a></div>
-                            </div>
+
                         </div>
                     </div>
                 </div>

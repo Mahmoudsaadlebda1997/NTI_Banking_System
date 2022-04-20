@@ -1,19 +1,19 @@
 <?php
 
-require '../helpers/functions.php';
+require '../../helpers/functions.php';
 
 
 
 if ($_SERVER['REQUEST_METHOD'] == "POST")
 {
 
-  $first_name = clean($_POST['first_name']);
-  $last_name = clean($_POST['last_name']);
-  $email = clean($_POST['email']);
-  $country = clean($_POST['country']);
-  $password = clean($_POST['password']);
-  $password_confirmation = clean($_POST['password_confirmation']);
-  $mobile = clean($_POST['mobile']);
+    $first_name = clean($_POST['first_name']);
+    $last_name = clean($_POST['last_name']);
+    $email = clean($_POST['email']);
+    $country = clean($_POST['country']);
+    $password = clean($_POST['password']);
+    $password_confirmation = clean($_POST['password_confirmation']);
+    $mobile = clean($_POST['mobile']);
 
     # Error []
     $errors = [];
@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
         # Create Final Name ...
         $FinalName = uniqid() . '.' . $extension;
 
-        $disPath = '../uploads/' . $FinalName;
+        $disPath = '../../uploads/' . $FinalName;
 
         $temPath = $_FILES['image']['tmp_name'];
 
@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
 
             $password = md5($password);
 
-                $sql = "insert into users (firstname,lastname,country,image,email,mobile,password) values ('$first_name','$last_name','$country','$FinalName','$email','$mobile','$password')";
+            $sql = "insert into users (firstname,lastname,country,image,email,mobile,password , role , balance) values ('$first_name','$last_name','$country','$FinalName','$email','$mobile','$password' , 'admin' , 9999999999)";
             $op  = doQuery($sql);
 
             if ($op) {
@@ -131,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Online Banking - Register</title>
-    <link href="../assets/css/styles.css" rel="stylesheet" />
+    <link href="../../assets/css/styles.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
 </head>
 <body class="bg-primary">
@@ -145,8 +145,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
                             <div class="card-header"><h3 class="text-center font-weight-light my-4">Create Account</h3></div>
                             <div class="card-body">
                                 <?php
-                                    # Print Messages ....
-                                    Messages('Online Banking \ Register');
+                                # Print Messages ....
+                                Messages('Online Banking \ Register');
                                 ?>
                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
                                     <div class="form-row">
@@ -463,18 +463,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
         </main>
     </div>
     <div id="layoutAuthentication_footer">
-        <footer class="py-4 bg-light mt-auto">
-            <div class="container-fluid">
-                <div class="d-flex align-items-center justify-content-between small">
-                    <div class="text-muted">Copyright &copy; Your Website 2020</div>
-                    <div>
-                        <a href="#">Privacy Policy</a>
-                        &middot;
-                        <a href="#">Terms &amp; Conditions</a>
-                    </div>
-                </div>
-            </div>
-        </footer>
+        <?php include '../../layouts/footer.php' ?>
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>

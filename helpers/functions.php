@@ -142,9 +142,16 @@ function validate($input, $flag,$length = 6 , $equalTo = null)
 function Messages($text = null )
 {
     if (isset($_SESSION['Message'])) {
-        foreach ($_SESSION['Message'] as $key => $value) {
-            echo ' * ' . $key . ' : ' . $value . '<br>';
+
+        if(is_array($_SESSION['Message'])){
+            foreach ($_SESSION['Message'] as $key => $value) {
+                echo ' * ' . $key . ' : ' . $value . '<br>';
+            }
         }
+        else {
+            echo $_SESSION['Message'];
+        }
+
 
         unset($_SESSION['Message']);
     }else{
@@ -179,7 +186,7 @@ function increaseBalance($input1,$input2){
 
 function url($input){
 
-    return 'http://'.$_SERVER['HTTP_HOST'].'/group13/week3/Admin/'.$input;
+    return 'http://'.$_SERVER['HTTP_HOST'].'/NTI_Banking_System/'.$input;
 }
 
 ###############################################################################################################

@@ -1,6 +1,6 @@
 <?php
 require '../helpers/functions.php';
-require 'checklogin.php';
+require '../helpers/checklogin.php';
 # Fetch Id Data ....
 $userId = $_SESSION['user']['id'];
 

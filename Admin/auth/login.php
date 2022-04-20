@@ -1,6 +1,6 @@
 <?php
 
-require '../helpers/functions.php';
+require '../../helpers/functions.php';
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
@@ -36,24 +36,26 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
          # DB OP ......... 
       $password = md5($password);
-      $sql = "select * from users where email = '$email'  and  password = '$password'";
+      $sql = "select * from users where email = '$email'  and  password = '$password' and role = 'admin'";
       $op  = doQuery($sql);
 
       if ($op) {
           $message = ["success" => "Login Succesfully"];
+          $_SESSION['Message'] = $message;
           $userData = mysqli_fetch_assoc($op);
 
           $_SESSION['user'] = $userData;
 
-          header("location: index.php");
+          header("location: ../index.php");
 
       } else {
           $message = ["Error" => "Wrong Credentials"];
+          $_SESSION['Message'] = $message;
       }
 
 
 
-     # Close Connection .... 
+     # Close Connection ....
       mysqli_close($con); 
 
 
@@ -70,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Online_Banking</title>
+        <title>Online Banking - Admin Login</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
             integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
@@ -88,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                     # Print Messages ....
                                     Messages('Online Banking \ Login');
                                 ?>
-                        <form action="" method="post">
+                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                             <div class="p-4">
                                 <div class="input-group mb-3">
                                     <span class="input-group-text bg-primary"><i

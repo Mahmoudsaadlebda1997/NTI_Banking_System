@@ -10,6 +10,20 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
     $amount = clean($_POST['amount']);
     $reason = clean($_POST['reason']);
 
+    #Sender Data
+    $senderID = $_SESSION['user']['id'];
+    $query = "Select * from users where id = '$senderID'";
+    $op = doQuery($query);
+    $senderData = mysqli_fetch_assoc($op);
+    $senderBalance = $senderData['balance'];
+
+    #Receiver Data
+    $query = "Select * from users where email = '$email'";
+    $op = doQuery($query);
+    $receiverData = mysqli_fetch_assoc($op);
+    $receiverID = $receiverData['id'];
+    $receiverBalance = $receiverData['balance'];
+
     # Error []
     $errors = [];
 
@@ -22,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
     } elseif (validate($email, 'email_not_exist')) {
         $errors['Email'] = "Email is not exist";
     } elseif($email == $_SESSION['user']['email']){
-        $errors['Email'] = "The provided email cannot be the same";
+        $errors['Email'] = "You Cannot Send Money To Ur Self Choose Different Email";
 
     }
 
@@ -32,6 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
         $errors['Amount'] = "Field Required";
     } elseif (!validate($amount, 'int' , 1)) {
         $errors['Amount'] = "Amount must be >= 1$";
+     }else if($amount > $senderBalance){
+        $errors['Amount'] = "Your Balance Is Not Enough";
     }
 
     # Validate Reason
@@ -47,17 +63,20 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
     }
     else
     {
-        $userId = $_SESSION['user']['id'];
-        $query = "Select id from users where email = '$email'";
-        $op = doQuery($query);
-        $senderId = mysqli_fetch_assoc($op)['id'];
-
-        $sql = "insert into transactions (user_sender_id,user_receiver_id,type,amount,reason) values ($userId,$senderId,'deposit', $amount,'$reason')";
-
+        $receiverID = $receiverData['id'];
+        $sql = "insert into transactions (user_sender_id,user_receiver_id,type,amount,reason) values ($senderID,$receiverID,'deposit', $amount,'$reason')";
         $op  = doQuery($sql);
-
-        if ($op) {
+        # U Cannot Get Updated Balance From Session 
+        // $senderBalance = $_SESSION['user']['balance'];
+        if ($op) {         
             $message = ["success" => "Transaction is in pending"];
+            #Updating Balance For Sender And Receiver
+            $newReceiverBalance =increaseBalance($receiverBalance,$amount);
+            $newSenderBalance =decreaseBalance($senderBalance,$amount);
+            $decreaseSql = "update users set balance ='$newSenderBalance' where id =$senderID ";
+            $op =doQuery($decreaseSql);
+            $increaseSql = "update users set balance ='$newReceiverBalance' where id =$receiverID ";
+            $op =doQuery($increaseSql);
         } else {
             $message = ["Error" => "Try Again"];
         }
@@ -130,46 +149,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
                             <a class="nav-link" href="recievemoney.php">Recieve Money</a>
                         </nav>
                     </div>
-                    <!--     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
-                             <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                             Pages
-                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                         </a>
-                         <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-parent="#sidenavAccordion">
-                             <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
-                                     Authentication
-                                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                                 </a>
-                                 <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
-                                     <nav class="sb-sidenav-menu-nested nav">
-                                         <a class="nav-link" href="login.html">Login</a>
-                                         <a class="nav-link" href="register.html">Register</a>
-                                         <a class="nav-link" href="password.html">Forgot Password</a>
-                                     </nav>
-                                 </div>
-                                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
-                                     Error
-                                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                                 </a>
-                                 <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
-                                     <nav class="sb-sidenav-menu-nested nav">
-                                         <a class="nav-link" href="401.html">401 Page</a>
-                                         <a class="nav-link" href="404.html">404 Page</a>
-                                         <a class="nav-link" href="500.html">500 Page</a>
-                                     </nav>
-                                 </div>
-                             </nav>
-                         </div>
-                         <div class="sb-sidenav-menu-heading">Addons</div>
-                         <a class="nav-link" href="charts.html">
-                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                             Charts
-                         </a>
-                         <a class="nav-link" href="tables.html">
-                             <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                             Tables
-                         </a>-->
                 </div>
             </div>
             <div class="sb-sidenav-footer">

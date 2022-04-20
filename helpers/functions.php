@@ -1,5 +1,6 @@
 <?php
 include 'db.php';
+
 function Clean($input)
 {
 
@@ -62,9 +63,6 @@ function validate($input, $flag,$length = 6 , $equalTo = null)
                 $status = false;
             }
             break;
-
-
-
         case 'min':
             # code ...
             if (strlen($input) < $length) {
@@ -169,7 +167,14 @@ function removeFile($file){
 
     return $status;
 }
+function decreaseBalance($input1,$input2){
 
+    return $input1 - $input2;
+}
+function increaseBalance($input1,$input2){
+
+    return $input1 + $input2;
+}
 
 
 function url($input){

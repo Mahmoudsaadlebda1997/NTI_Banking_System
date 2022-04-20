@@ -2,12 +2,27 @@
 
 require '../helpers/functions.php';
 require 'checklogin.php';
-# Fetch Id Data ....
+# To Get Email in Table transctions from users
+$query = "select * from transactions inner join users on transactions.user_receiver_id = users.id";
+$getData = doQuery($query);
+#To Get Current User Updated Data
+$Id = $_SESSION['user']['id'];
+$query = "select * from users where id = $Id";
+$getID = doQuery($query);
+$userData= mysqli_fetch_assoc($getID);
+# To Get Current User Transctions ....
 $Id = $_SESSION['user']['id'];
 $query = "select * from transactions where user_sender_id = $Id";
-$op = doQuery($query);
-$totalTransactions = mysqli_num_rows($op);
-
+$getAllTransctions = doQuery($query);
+$totalTransactions = mysqli_num_rows($getAllTransctions);
+# To Get Success Transctions
+$query = "select * from transactions where user_sender_id = $Id AND status ='completed'";
+$getSucessTransctions = doQuery($query);
+$totalSucesssTransactions = mysqli_num_rows($getSucessTransctions);
+#To Get Canclned Transction
+$query = "select * from transactions where user_sender_id = $Id AND status ='refused'";
+$getCanceledTransctions = doQuery($query);
+$totalRefusedTransactions = mysqli_num_rows($getCanceledTransctions);
 ?>
 
 <!DOCTYPE html>
@@ -140,7 +155,7 @@ $totalTransactions = mysqli_num_rows($op);
                         <div class="card bg-warning text-white mb-4">
                             <div class="card-body">Balance</div>
                             <div class="card-footer d-flex align-items-center justify-content-between">
-                                <a class="small text-white stretched-link" href="#"><?php echo $_SESSION['user']['balance'] ?> $</a>
+                                <a class="small text-white stretched-link" href="#"><?php echo $userData['balance']?> $</a>
                                 <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                             </div>
                         </div>
@@ -149,7 +164,7 @@ $totalTransactions = mysqli_num_rows($op);
                         <div class="card bg-success text-white mb-4">
                             <div class="card-body">Success Transactions</div>
                             <div class="card-footer d-flex align-items-center justify-content-between">
-                                <a class="small text-white stretched-link" href="#">View Details</a>
+                                <a class="small text-white stretched-link" href="#"><?php echo $totalSucesssTransactions ?></a>
                                 <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                             </div>
                         </div>
@@ -158,7 +173,7 @@ $totalTransactions = mysqli_num_rows($op);
                         <div class="card bg-danger text-white mb-4">
                             <div class="card-body">Danger Card</div>
                             <div class="card-footer d-flex align-items-center justify-content-between">
-                                <a class="small text-white stretched-link" href="#">View Details</a>
+                                <a class="small text-white stretched-link" href="#"><?php echo $totalRefusedTransactions ?></a>
                                 <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                             </div>
                         </div>
@@ -183,30 +198,23 @@ $totalTransactions = mysqli_num_rows($op);
                                     <th>Reason</th>
                                 </tr>
                                 </thead>
-                                <tfoot>
-                                <tr>
-                                    <th>Transaction ID</th>
-                                    <th>Receiver Email</th>
-                                    <th>Type</th>
-                                    <th>Status</th>
-                                    <th>Amount</th>
-                                    <th>Reason</th>
-                                </tr>
-                                </tfoot>
-                                <tbody>
-                                <tr>
-                                    <td>Tiger Nixon</td>
-                                    <td>System Architect</td>
-                                    <td>Edinburgh</td>
-                                    <td>61</td>
-                                    <td>2011/04/25</td>
-                                    <td>$320,800</td>
-                                </tr>
 
+                                <?php
+                                while($raw = mysqli_fetch_assoc($getData))
+                                 {
 
-
-
-                                </tbody>
+                                    ?>
+                                    <tr>
+                                        <td><?php echo $raw['id'];?></td>
+                                        <td><?php echo $raw['email'];?></td>
+                                        <td><?php echo $raw['type'];?></td>
+                                        <td><?php echo $raw['status'];?></td>
+                                        <td><?php echo $raw['amount'];?>$</td>
+                                        <td><?php echo $raw['reason'];?></td>
+                                    </tr>
+                                <?php
+                                }
+                                ?>
                             </table>
                         </div>
                     </div>

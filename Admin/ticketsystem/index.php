@@ -74,15 +74,18 @@ $getData = doQuery($query);
 
                                     ?>
                                     <tr>
-                                        <?php
 
-                                        ?>
                                         <td><?php echo $raw['id'];?></td>
                                         <td><?php echo $raw['transaction_id']; ?></td>
                                         <td><?php echo ucfirst($raw['status']);?></td>
-                                        <td><?php ?>
-                                            <a href='accept.php?id=<?php echo $raw['id'];?>' class='btn btn-success m-r-1em'>Accept</a>
-                                            <a href='refuse.php?id=<?php echo $raw['id'];?>'class='btn btn-danger m-r-1em'>Refuse</a>
+                                        <td>
+                                            <?php if($raw['status'] == 'pending'): ?>
+                                                <a href='accept.php?id=<?php echo $raw['id'];?>&type=<?php echo $raw['type'] ?>' class='btn btn-success m-r-1em'>Accept</a>
+                                                <a href='refuse.php?id=<?php echo $raw['id'];?>&type=<?php echo $raw['type'] ?>'class='btn btn-danger m-r-1em'>Refuse</a>
+                                                <?php else:?>
+                                               No Action Avaliable
+                                        <?php endif; ?>
+
                                         </td>
                                     </tr>
                                     <?php

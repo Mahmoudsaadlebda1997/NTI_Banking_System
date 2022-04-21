@@ -117,7 +117,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                 <p class="text-center mt-5">Don't have an account?
                                     <a class="text-primary" href="register.php">Sign Up</a>
                                 </p>
-                                <p class="text-center text-primary">Forgot your password?</p>
+                                <p class="text-center text-primary">
+                                    <a class="text-primary" href="<?php echo url('User/auth/login.php') ?>">Login as User</a>
+                                    <a class="text-primary" href="<?php echo url('Admin/auth/login.php') ?>">Login as Admin</a>
+
+                                </p>
                             </div>
                         </form>
                     </div>

@@ -1,7 +1,7 @@
 <?php
 
 $id = $_GET['id'];
-$type = $_GET['type'];
+
 
 require '../../helpers/functions.php';
 require '../../helpers/checklogin.php';
@@ -23,7 +23,9 @@ else
 {
 
     $op = doQuery("update tickets set status = 'completed' where id = $id ");
-    $data = mysqli_fetch_assoc($op);    
+    $_SESSION['Message'] = 'Ticket is Accepted';
+
+    header("location: ../index.php");
   
 }
 

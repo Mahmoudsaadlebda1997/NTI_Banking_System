@@ -82,7 +82,10 @@ else
     $increaseSql = "update users set balance ='$newReceiverBalance' where id =$receiverID ";
     $op =doQuery($increaseSql);
     }
-    
+
+    $_SESSION['Message'] = 'Transaction is Accepted';
+
+    header("location: ../index.php");
 }
 
 

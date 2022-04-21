@@ -24,9 +24,11 @@ else
     $op = doQuery("insert into transactions_log (transaction_id , status) values ($id , 'refused')");
     $op = doQuery("select * from transactions where id = $id and type = '$type'");
     $data = mysqli_fetch_assoc($op);
-
-
     $op = doQuery("update transactions set status = 'refused' where id = $id ");
+
+    $_SESSION['Message'] = 'Transaction is refused';
+
+    header("location: ../index.php");
 }
 
 

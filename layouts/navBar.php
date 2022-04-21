@@ -23,7 +23,12 @@
                 <a class="dropdown-item" href="#">Settings</a>
                 <a class="dropdown-item" href="#">Activity Log</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="<?php echo url('Admin/auth/logout.php') ?>">Logout</a>
+                <a class="dropdown-item" href="<?php echo url('User/auth/logout.php') ?>">Logout</a>
+           <!--     <?php /*if($_SESSION['user']['role'] == 'user'):*/?>
+                    <a class="dropdown-item" href="<?php /*echo url('User/auth/logout.php') */?>">Logout</a>
+                    <?php /*else:*/?>
+                    <a class="dropdown-item" href="<?php /*echo url('Admin/auth/logout.php') */?>">Logout</a>
+                --><?php /*endif;*/?>
             </div>
         </li>
     </ul>

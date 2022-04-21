@@ -23,8 +23,9 @@ else
 {
 
     $op = doQuery("update tickets set status = 'refused' where id = $id ");
-    $data = mysqli_fetch_assoc($op);
-  
+    $_SESSION['Message'] = 'Ticket is Refused';
+
+    header("location: ../index.php");
 }
 
 

@@ -42,17 +42,36 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 
 
-      if ($rowsAffected) {
+
+        $userData = mysqli_fetch_assoc($op);
+        $id = $userData['id'];
+        $isBlockedOp = doQuery("select * from blocked_users where user_id = $id");
+        $isBlocked = mysqli_num_rows($isBlockedOp);
+
+
+        if($isBlocked){
+            $_SESSION['Message'] = "User is blocked";
+            header("location: ../../index.php");
+            exit();
+        }
+
+
+      if ($rowsAffected ) {
+
+
           $message = ["success" => "Login Succesfully"];
           $_SESSION['Message'] = $message;
-          $userData = mysqli_fetch_assoc($op);
 
           $_SESSION['user'] = $userData;
+          var_dump($_SESSION['user']);
+
 
           header("location: ../../index.php");
 
 
+
       } else {
+
           $message = ["Error" => "Wrong Credentials"];
           $_SESSION['Message'] = $message;
       }

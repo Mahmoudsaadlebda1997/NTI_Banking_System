@@ -36,6 +36,20 @@
         </nav>
     </div>
 
+    <?php if($_SESSION['user']['role'] == 'admin'): ?>
+
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsersList" aria-expanded="false" aria-controls="collapseLayouts">
+            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+            Users
+            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+        </a>
+        <div class="collapse" id="collapseUsersList" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+            <nav class="sb-sidenav-menu-nested nav">
+                <a class="nav-link" href="<?php echo url('Admin/users/index.php') ?>">All Users</a>
+            </nav>
+        </div>
+    <?php endif ;?>
+
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTicket" aria-expanded="false" aria-controls="collapsePages">
         <div class="sb-nav-link-icon"><i class="fas fa-ticket-alt"></i></div>
         Ticket

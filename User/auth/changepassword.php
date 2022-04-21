@@ -1,6 +1,6 @@
 <?php
-require '../helpers/functions.php';
-require '../helpers/checklogin.php';
+require '../../helpers/functions.php';
+require '../../helpers/checklogin.php';
 # Fetch Id Data ....
 $userId = $_SESSION['user']['id'];
 
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
 
             $_SESSION['Message'] = $message;
 
-            header("location: index.php");
+            header("location: ../edit.php");
         } else {
             echo 'Error Try Again ' . mysqli_error($con);
         }

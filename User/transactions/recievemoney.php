@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
     } elseif (validate($email, 'email_not_exist')) {
         $errors['Email'] = "Email is not exist";
     } elseif($email == $_SESSION['user']['email']){
-        $errors['Email'] = "You Cannot Send Money To Ur Self Choose Different Email";
+        $errors['Email'] = "You Cannot Request TO Receive Money To Ur Self Choose Different Email";
 
     }
 
@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Dashboard - SB Admin</title>
+    <title>Online Banking - Receive Money</title>
     <link href="../../assets/css/styles.css" rel="stylesheet" />
     <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>

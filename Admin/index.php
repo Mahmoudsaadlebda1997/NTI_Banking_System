@@ -125,16 +125,17 @@ function getEmailById($id){
                                     <th>Action</th>
                                 </tr>
                                 </thead>
-
+                                <!-- if Status = pending admin can control transction else he wouldnt-->
                                 <?php
                                 while($raw = mysqli_fetch_assoc($allTranascations))
                                 {
+                                    if($raw['status'] == 'pending'){
 
-                                    ?>
+                                        ?>
                                     <tr>
                                         <?php
                                         $email = getEmailById($raw['user_receiver_id']);
-
+                                        
                                         ?>
                                         <td><?php echo $raw['id'];?></td>
                                         <td><?php echo ucfirst($raw['type']); ?></td>
@@ -142,13 +143,32 @@ function getEmailById($id){
                                         <td><?php echo ucfirst($raw['status']);?></td>
                                         <td><?php echo $raw['amount'];?>$</td>
                                         <td><?php echo $raw['reason'];?></td>
-                                        <td><?php ?>
+                                        <td> 
                                             <a href='accept.php?id=<?php echo $raw['id'];?>&type=<?php echo $raw['type'] ?>' class='btn btn-success m-r-1em'>Accept</a>
                                             <a href='refuse.php?id=<?php echo $raw['id'];?>&type=<?php echo $raw['type'] ?>'class='btn btn-danger m-r-1em'>Refuse</a>
                                         </td>
                                     </tr>
                                     <?php
-                                }
+                                }else{
+                                    ?>
+                                    <tr>
+                                    <?php
+                                    $email = getEmailById($raw['user_receiver_id']);
+                                    
+                                    ?>
+                                    <td><?php echo $raw['id'];?></td>
+                                    <td><?php echo ucfirst($raw['type']); ?></td>
+                                    <td><?php echo ($email == $_SESSION['user']['email'] ? 'You' : $email) ?></td>
+                                    <td><?php echo ucfirst($raw['status']);?></td>
+                                    <td><?php echo $raw['amount'];?>$</td>
+                                    <td><?php echo $raw['reason'];?></td>
+                                    <td>No Action Avaliable</td>
+                                </tr>
+                                <?php
+                            }
+                            }
+                               
+
                                 ?>
                             </table>
                         </div>

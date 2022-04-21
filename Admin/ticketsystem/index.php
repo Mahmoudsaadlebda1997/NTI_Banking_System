@@ -5,7 +5,9 @@ require '../../helpers/checklogin.php';
 
 
 $Id = $_SESSION['user']['id'];
-$query = "select * from tickets  where user_id = $Id and status = 'pending'";
+// $query = "select * from tickets  where status = 'pending'";
+$query = "select * from tickets";
+
 $getData = doQuery($query);
 
 
@@ -78,7 +80,10 @@ $getData = doQuery($query);
                                         <td><?php echo $raw['id'];?></td>
                                         <td><?php echo $raw['transaction_id']; ?></td>
                                         <td><?php echo ucfirst($raw['status']);?></td>
-
+                                        <td><?php ?>
+                                            <a href='accept.php?id=<?php echo $raw['id'];?>' class='btn btn-success m-r-1em'>Accept</a>
+                                            <a href='refuse.php?id=<?php echo $raw['id'];?>'class='btn btn-danger m-r-1em'>Refuse</a>
+                                        </td>
                                     </tr>
                                     <?php
                                 }

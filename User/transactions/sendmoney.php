@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
     $email = clean($_POST['email']);
     $amount = clean($_POST['amount']);
     $reason = clean($_POST['reason']);
+    #transction Data
 
     #Sender Data
     $senderID = $_SESSION['user']['id'];
@@ -73,13 +74,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
         // $senderBalance = $_SESSION['user']['balance'];
         if ($op) {         
             $message = ["success" => "Transaction is in pending"];
-            #Updating Balance For Sender And Receiver
-            $newReceiverBalance =increaseBalance($receiverBalance,$amount);
-            $newSenderBalance =decreaseBalance($senderBalance,$amount);
-            $decreaseSql = "update users set balance ='$newSenderBalance' where id =$senderID ";
-            $op =doQuery($decreaseSql);
-            $increaseSql = "update users set balance ='$newReceiverBalance' where id =$receiverID ";
-            $op =doQuery($increaseSql);
+            
+            // #Updating Balance For Sender And Receiver
+            // $newReceiverBalance =increaseBalance($receiverBalance,$amount);
+            // $newSenderBalance =decreaseBalance($senderBalance,$amount);
+            // $decreaseSql = "update users set balance ='$newSenderBalance' where id =$senderID ";
+            // $op =doQuery($decreaseSql);
+            // $increaseSql = "update users set balance ='$newReceiverBalance' where id =$receiverID ";
+            // $op =doQuery($increaseSql);
         } else {
             $message = ["Error" => "Try Again"];
         }

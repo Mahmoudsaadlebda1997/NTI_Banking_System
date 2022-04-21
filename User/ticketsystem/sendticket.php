@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
                     <li class="breadcrumb-item active">
                         <?php
                         # Print Messages ....
-                        Messages('Dashboard / Send Money');
+                        Messages('Dashboard / Send Ticket');
                         ?>
 
                     </li>
@@ -117,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
                                 </div>
 
                             </div>
-                            <button class="form-control btn btn-primary btn-block">Send Money</button>
+                            <button class="form-control btn btn-primary btn-block">Send Ticket</button>
 
                         </form>
                     </div>
